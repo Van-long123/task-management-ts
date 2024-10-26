@@ -15,6 +15,26 @@ app.get('/tasks',async  (req:Request, res:Response) => {
     })
     res.json(tasks)
 })
+
+app.get('/tasks',async  (req:Request, res:Response) => {
+    const tasks=await Task.find({
+        deleted:false  
+    })
+    res.json(tasks)
+})
+app.get('/tasks/detail/:id',async  (req:Request, res:Response) => {
+    try {
+        const id: string=req.params.id
+        const task=await Task.findOne({
+            _id:id,
+            deleted:false
+        })
+        res.json(task)//lúc này chỉ cần front nó truy cập vào link /task này ta sẽ trả cho ổng ấy chuỗi json
+    } catch (error) {
+        res.json("ko tìm thấy")
+    }
+
+})
 app.listen(port,()=>{
     console.log("http://localhost:3000/ "+port)
 })
