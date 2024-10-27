@@ -66,3 +66,18 @@ export const login = async  (req:Request, res:Response) => {
         token:token
     })
 }
+
+export const detail = async  (req:Request, res:Response) => {
+    try {
+        // nếu mà token ko đúng thì user là null thôi ko lọt vào cathc
+        res.json({
+            code:200,
+            message:"Thành công!",
+            info:req['user']
+        })
+    } catch (error) {
+        res.json({
+            code:400,
+        })
+    }
+}
