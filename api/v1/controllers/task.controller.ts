@@ -1,5 +1,6 @@
 import Task from "../models/task.model"
 import {Request,Response,Router} from 'express';
+import paginationHelper from '../../../helpers/pagination'
 // Request và Response được express định nghĩa sẵn
 
 export const index = async  (req:Request, res:Response) => {
@@ -24,7 +25,20 @@ export const index = async  (req:Request, res:Response) => {
         sort[sortKey]=req.query.sortValue
     }
     // sort 
-    const tasks=await Task.find(find).sort(sort)
+
+
+    // Pagination 
+    const countTasks=await Task.countDocuments(find); //đem qua bên kia sẽ lỗi nếu thêm async vào trước function cũng lỗi vì bên này có 1 async rồi
+    let objectPagination=paginationHelper(req.query,countTasks,
+        // truyền object sang vì thằng này tách ra để dùng chung ví dụ này hiển thị 4 mà bên product client hiển thị 6 sản phẩm thì sao 
+        {
+            currentPage:1,
+            limitItems:2
+        }
+    );
+    // end Pagination 
+    const tasks=await Task.find(find).sort(sort).limit(objectPagination.limitItems)
+    .skip(objectPagination.skip);
     res.json(tasks)
 }
 export const detail = async  (req:Request, res:Response) => {
