@@ -1,6 +1,7 @@
 import Task from "../models/task.model"
 import {Request,Response,Router} from 'express';
 import paginationHelper from '../../../helpers/pagination'
+import searchHelper from '../../../helpers/search'
 // Request và Response được express định nghĩa sẵn
 
 export const index = async  (req:Request, res:Response) => {
@@ -9,7 +10,8 @@ export const index = async  (req:Request, res:Response) => {
     //biến 1 giá trị sang string thì tostring 
     interface Find{
         deleted:boolean,
-        status?:string
+        status?:string,
+        title?:RegExp,
     }
     const find:Find={
         deleted:false  
@@ -25,7 +27,12 @@ export const index = async  (req:Request, res:Response) => {
         sort[sortKey]=req.query.sortValue
     }
     // sort 
-
+    //Search
+    const objectSearch=searchHelper(req.query)
+    if(req.query.keyword){
+        find.title=objectSearch.regex;
+    }
+    //end search
 
     // Pagination 
     const countTasks=await Task.countDocuments(find); //đem qua bên kia sẽ lỗi nếu thêm async vào trước function cũng lỗi vì bên này có 1 async rồi
