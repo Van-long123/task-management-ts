@@ -7,6 +7,7 @@ router.get('/',controller.index)
 
 // //chi tiết công việc
 router.get('/detail/:id',controller.detail)
+router.patch('/change-status/:id',controller.changeStatus)
 
 
 
