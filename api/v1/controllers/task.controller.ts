@@ -123,3 +123,33 @@ export const changeMulti=async (req:Request, res:Response)=>{
         })
     }
 }
+
+export const create=async (req:Request, res:Response)=>{
+    try {
+        if(req.body.taskParentId){
+            const taskParent=await Task.findOne({
+                _id:req.body.taskParentId
+            })
+            if(!taskParent){
+                res.json({
+                    code:400,
+                    message:"Task cha không tồn tại!",
+                })
+                return 
+            }
+        }
+        const task=new Task(req.body)
+        await task.save()
+        
+        res.json({
+            code:200,
+            message:"Tạo thành công!",
+            data:task
+        })
+    } catch (error) {
+        res.json({
+            code:400,
+            message:"Lỗi!",
+        })
+    }
+}
