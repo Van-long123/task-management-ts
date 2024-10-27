@@ -169,3 +169,21 @@ export const edit=async (req:Request, res:Response)=>{
         res.json("Lỗi!")
     }
 }
+export const deleteTask=async (req:Request, res:Response)=>{
+    try {
+        const id:string=req.params.id
+        await Task.updateOne({
+            _id:id,
+            deleted:false
+        },{
+            deleted:true,
+            deletedAt:new Date()
+        })
+        res.json({
+            code:200,
+            message:"Xóa thành công!"
+        })
+    } catch (error) {
+        res.json("Lỗi!")
+    }
+}
