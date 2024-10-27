@@ -16,7 +16,15 @@ export const index = async  (req:Request, res:Response) => {
     if(req.query.status){
         find.status=req.query.status.toString()
     }
-    const tasks=await Task.find(find)
+    // sort 
+    let sort={}
+    // từ a-z là asc tăng dần
+    if(req.query.sortKey&&req.query.sortValue){
+        const sortKey=req.query.sortKey.toLocaleString()//để này cho linh động ko cần dùng inter
+        sort[sortKey]=req.query.sortValue
+    }
+    // sort 
+    const tasks=await Task.find(find).sort(sort)
     res.json(tasks)
 }
 export const detail = async  (req:Request, res:Response) => {
