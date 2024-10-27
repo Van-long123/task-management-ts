@@ -81,3 +81,45 @@ export const changeStatus=async (req:Request, res:Response)=>{
         })
     }
 }
+
+export const changeMulti=async (req:Request, res:Response)=>{
+    try {
+        const ids:string[]=req.body.ids;
+        const key:string=req.body.key;
+        const value:string =req.body.value;
+
+        // làm enum để gõ sai key khác sẽ báo lỗi 
+        enum Key{
+            STATUS='status',
+            DELETE='delete'
+        }
+        switch(key) {
+            case Key.STATUS:
+                await Task.updateMany({ _id: { $in : ids } }, { status:value})
+                res.json({
+                    code:200,
+                    message:"Cập nhật trạng thái thành công"
+                })
+                break;
+            case Key.DELETE:
+                await Task.updateMany({ _id: { $in : ids } }, { deleted:true,deletedAt:new Date()})
+                res.json({
+                    code:200,
+                    message:"Xóa thành công"
+                })
+                break;
+            default:
+                res.json({
+                    code:401,
+                    message:"Ko tồn tại"
+                })
+                break;
+        }
+        
+    } catch (error) {
+        res.json({
+            code:400,
+            message:"Ko tồn tại"
+        })
+    }
+}
