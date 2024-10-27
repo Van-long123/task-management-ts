@@ -6,7 +6,7 @@ import * as controller from '../controllers/user.controller'
 // const validate=require('../validates/user.validate')
 
 router.post('/register',controller.register)
-
+router.post('/login',controller.login)
 
 // router.post('/register',validate.register,controller.register)
 // router.post('/login',validate.login,controller.login)
